@@ -7,4 +7,8 @@ router.get('/plantas',(req,res)=>{
     res.sendFile(path.resolve(__dirname, '../src/plantas/plantas.html'));
 })
 
+router.get('/perfil',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/perfil/perfil.html'));
+})
+
 module.exports=router;
