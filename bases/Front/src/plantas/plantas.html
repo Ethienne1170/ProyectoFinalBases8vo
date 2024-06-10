@@ -7,91 +7,191 @@
     <link rel="stylesheet" href="../plantas.css" />
     <script src="../plantas.js"></script>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 20px;
-      }
+            body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #plantas-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .card {
+            /*border: 1px solid #ccc;
+            border-radius: 8px;*/
+            padding: 16px;
+            margin: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /*width: 200px;*/
+            text-align: center;
+        }
+        .center {
+            display: flex;
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            z-index: 1000;
+        }
+        .popup {
+            display: none;
+            /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            /* Asegura que el popup esté en frente de todos los elementos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Fondo semi-transparente */
+        }
+        .popup-content {
+            background-color: #fff;
+            margin: 15% auto;
+            /* 15% desde la parte superior y centrado */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Ocupa el 50% de la pantalla */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-      h1 {
-        color: #333;
-        text-align: center;
-        margin-top: 20px;
-      }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-      #plantas-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .card {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 16px;
-        margin: 16px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 200px;
-        text-align: center;
-      }
-      .center {
-        display: flex;
-        position: absolute;
-        z-index: 100;
-      }
+        .info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
     </style>
   </head>
-
   <body>
     <p>they gonna put me in the movies</p>
     <h1>Lista de Plantas</h1>
     <div id="plantas-container"></div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // URL de la API
-        const apiUrl = "http://localhost:3000/plantas/plantas";
+        document.addEventListener('DOMContentLoaded', function () {
+            // URL de la API
+            const apiUrl = 'http://localhost:3000/plantas/plantas';
 
-        // Contenedor donde se mostrarán los datos
-        const plantasContainer = document.getElementById("plantas-container");
+            // Contenedor donde se mostrarán los datos
+            const plantasContainer = document.getElementById('plantas-container');
+            const popup = document.getElementById('popup');
+            const popupTitle = document.getElementById('popup-title');
+            const popupDescription = document.getElementById('popup-description');
+            const popupGenero = document.getElementById('genero');
+            const popupFamilia = document.getElementById('familia');
+            const popupExtinta = document.getElementById('extinta');
 
-        // Función para crear una tarjeta (card) para cada planta
-        function createPlantCard(planta) {
-          const card = document.createElement("div");
-          card.className = "card";
+            const popupImage = document.getElementById('popup-image');
 
-          // Aquí asume que la API devuelve propiedades 'name', 'description' e 'image'
-          card.innerHTML = `
-            <h2>${planta.nombre}</h2>
-            <p>${planta.genero}</p>
+
+            const closeBtn = document.querySelector('.close-btn');
+
+
+            // Función para crear una tarjeta (card) para cada planta
+            function createPlantCard(planta) {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                // Aquí asume que la API devuelve propiedades 'name', 'description' e 'image'
+                card.innerHTML = `
+            <img src="${planta.url_imagen}" class="card-img-top" alt="${planta.nombre}">
+            <div class="card-body">
+                <h5 class="card-title">${planta.nombre}</h5>
+                <p class="card-text">${planta.genero}</p>
+            </div>
         `;
 
-          card.addEventListener("click", () => {
-            alert(planta.clave);
-          });
+                card.addEventListener('click', () => {
+                    //alert(planta.clave);
 
-          plantasContainer.appendChild(card);
-        }
+                    popupTitle.textContent = planta.nombre;
+                    popupDescription.textContent = planta.genero;
+                    popupImage.src = planta.url_imagen;
+                    popupImage.alt = planta.nombre;
+                    popupGenero.textContent = planta.genero;
+                    popupFamilia.textContent = planta.familia;
+                    popupExtinta.textContent = planta.extinta;
+                    popup.style.display = 'block';
 
-        // Usar fetch para obtener los datos de la API
-        fetch(apiUrl)
-          .then((response) => {
-            console.log(response);
-            if (!response.ok) {
-              throw new Error("Error en la solicitud: " + response.status);
+
+
+                })
+
+                plantasContainer.appendChild(card);
             }
-            return response.json(); // Convertir la respuesta a JSON
-          })
-          .then((data) => {
-            // Suponiendo que data es un array de plantas
-            data.forEach((planta) => createPlantCard(planta));
-          })
-          .catch((error) => {
-            console.error("Hubo un problema con la solicitud fetch:", error);
-            plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
-          });
-      });
+
+            // Usar fetch para obtener los datos de la API
+            fetch(apiUrl)
+                .then(response => {
+                    console.log(response)
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.status);
+                    }
+                    return response.json(); // Convertir la respuesta a JSON
+                })
+                .then(data => {
+                    // Suponiendo que data es un array de plantas
+                    data.forEach(planta => createPlantCard(planta));
+                })
+                .catch(error => {
+                    console.error('Hubo un problema con la solicitud fetch:', error);
+                    plantasContainer.innerHTML = '<p>Error al obtener los datos.</p>';
+                });
+
+            closeBtn.addEventListener('click', function () {
+                popup.style.display = 'none';
+            });
+
+            // Cerrar el popup cuando se hace clic fuera del contenido del popup
+            window.addEventListener('click', function (event) {
+                if (event.target == popup) {
+                    popup.style.display = 'none';
+                }
+            });
+        });
+
+
+
     </script>
-    <div class="center" id="popup"></div>
-  </body>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="popup-title"></h2>
+            <img id="popup-image" src="" alt="" style="width:100%; height:auto;">
+            <div class="info">
+                <p id="popup-description"></p>
+                <p id="genero"></p>
+                <p id="familia"></p>
+                <p id="extinta"></p>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+</body>
+
+  
 </html>
