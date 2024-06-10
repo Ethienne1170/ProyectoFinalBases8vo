@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invernaderos</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      #inver-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 200px;
+        text-align: center;
+      }
+      .center {
+        display: flex;
+        position: absolute;
+        z-index: 100;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header-container"></div>
+
+    <h1>Lista de Invernaderos</h1>
+    <div id="inver-container"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        cargarHeader();
+        // URL de la API
+        const apiUrl = "http://localhost:3000/plantas/invernaderos";
+
+        // Contenedor donde se mostrarán los datos
+        const inverContainer = document.getElementById("inver-container");
+
+        // Función para crear una tarjeta (card) para cada planta
+        function createCard(inver) {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          // Aquí asume que la API devuelve propiedades 'name', 'description' e 'image'
+          card.innerHTML = `
+            <h2>${inver.nombre}</h2>
+            <p><b>Propietario:</b> ${inver.nUsuario}</p>
+            <p><b>Ubicación:</b>  ${inver.calle} #${inver.numeroext} int.${inver.numeroint}, ${inver.estado}</p>
+        `;
+
+          card.addEventListener("click", () => {
+            alert(inver.clave);
+          });
+
+          inverContainer.appendChild(card);
+        }
+
+        // Usar fetch para obtener los datos de la API
+        fetch(apiUrl)
+          .then((response) => {
+            console.log(response);
+            if (!response.ok) {
+              throw new Error("Error en la solicitud: " + response.status);
+            }
+            return response.json(); // Convertir la respuesta a JSON
+          })
+          .then((data) => {
+            // Suponiendo que data es un array de plantas
+            data.forEach((inver) => createCard(inver));
+          })
+          .catch((error) => {
+            console.error("Hubo un problema con la solicitud fetch:", error);
+            plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
+          });
+      });
+      
+      function cargarHeader(){
+        //http://localhost:3500/pages/header
+        fetch("http://localhost:3500/pages/header")
+        .then(response =>{
+            response.text();
+            console.log(response.text());
+        })
+        .then(data => {
+          document.getElementById("header-container").innerHTML = data;
+        })
+        .catch(error => console.error('Error al cargar el header:', error));
+      }
+    </script>
+    <div class="center" id="popup"></div>
+  </body>
+</html>

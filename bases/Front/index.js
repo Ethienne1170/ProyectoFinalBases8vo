@@ -21,5 +21,5 @@ app.get('/',(req,res)=>{
 
 
 app.listen(3500,()=>{
-    console.log('servidor corriendo en el puerto')
+    console.log('servidor corriendo en el puerto: 3500')
 });
