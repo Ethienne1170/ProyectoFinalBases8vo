@@ -11,4 +11,13 @@ router.get('/perfil',(req,res)=>{
     res.sendFile(path.resolve(__dirname, '../src/perfil/perfil.html'));
 })
 
+router.get('/invernaderos',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/invernaderos/invernaderos.html'));
+})
+
+router.get('/header',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/header.html'));
+})
+
+
 module.exports=router;
