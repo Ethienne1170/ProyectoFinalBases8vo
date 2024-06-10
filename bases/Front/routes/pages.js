@@ -23,6 +23,10 @@ router.get('/home', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/home/home.html'))
 })
 
+router.get('/header', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/header.html'))
+})
+
 
 
 module.exports=router;
