@@ -10,8 +10,6 @@
 </head>
 
 <body>
-    <a href="pages/plantas"> plantas</a>
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Inicio</a>
@@ -40,6 +38,104 @@
             </div>
         </div>
     </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <form id="formLogin">
+                    <div class="mb-3 row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Usuario</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="usuario">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Contraseña</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="contrasena">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-3">Entrar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const formulario = document.getElementById("formLogin");
+
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            // Verificar si existe la cookie 'nombre' y 'email'
+            const usuarioCookie = getCookie('usuario');
+
+            if (usuarioCookie) {
+                const tiempoDeVida = 60 * 60; //1 hora en seg
+                // Crear una fecha de expiración
+                const fechaDeExpiracion = new Date();
+                fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
+                const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
+                document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
+                window.location.href = "http://localhost:3500/pages/home";
+            }
+
+            formulario.addEventListener("submit", function (event) {
+                // Prevenir el envío del formulario
+                event.preventDefault();
+
+                // Obtener los valores de los campos del formulario
+                const user = document.getElementById("usuario").value;
+                const pass = document.getElementById("contrasena").value;
+
+                function verifUser(usuario) {
+                    console.log("us: " + usuario.usuario + "  pass: " + usuario.contrasena);
+                    if (usuario.usuario === user && usuario.contrasena === pass) {
+                        const tiempoDeVida = 60 * 60; //1 hora en seg
+
+                        // Crear una fecha de expiración
+                        const fechaDeExpiracion = new Date();
+                        fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
+                        const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
+
+                        document.cookie = `usuario=${user}; ${expires}; path=/`;
+                        //document.cookie = `email=${email}; path=/`;
+                        window.location.href = "http://localhost:3500/pages/home";
+                    }
+                }
+
+                const apiUrl = "http://localhost:3000/plantas/login";
+
+                // Usar fetch para obtener los datos de la API
+                fetch(apiUrl)
+                    .then((response) => {
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error("Error en la solicitud: " + response.status);
+                        }
+                        return response.json(); // Convertir la respuesta a JSON
+                    })
+                    .then((data) => {
+                        // Suponiendo que data es un array de plantas
+                        data.forEach((usuario) => verifUser(usuario));
+                    })
+                    .catch((error) => {
+                        console.error("Hubo un problema con la solicitud fetch:", error);
+                        plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
+                    });
+
+                // Puedes realizar una solicitud AJAX aquí o cualquier otra acción necesaria
+            });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
