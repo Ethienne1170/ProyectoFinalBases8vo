@@ -12,6 +12,8 @@ app.use(express.json());
 
 app.use('/plantas', plantas);
 app.use('/invernaderos', plantas);
+app.use('/usuario', plantas);
+app.use('/login', plantas);
 
 app.listen(3000,()=>{
     console.log('servidor corriendo en el puerto: 3000')

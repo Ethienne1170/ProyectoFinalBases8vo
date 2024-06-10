@@ -35,5 +35,35 @@ router.get('/invernaderos', (req, res)=>{
     }
 })
 
+router.get('/usuarios', (req, res)=>{
+    try {
+        db.query('SELECT * FROM usuario', (error, result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+
+router.get('/login', (req, res)=>{
+    try {
+        db.query('SELECT usuario, contrasena FROM usuario', (error, result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+
 
 module.exports=router;
