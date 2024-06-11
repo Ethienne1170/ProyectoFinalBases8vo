@@ -15,10 +15,6 @@ router.get('/invernaderos',(req,res)=>{
     res.sendFile(path.resolve(__dirname, '../src/invernaderos/invernaderos.html'));
 })
 
-router.get('/perfil',(req,res)=>{
-    res.sendFile(path.resolve(__dirname, '../src/perfil/perfil.html'));
-})
-
 router.get('/home', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/home/home.html'))
 })
