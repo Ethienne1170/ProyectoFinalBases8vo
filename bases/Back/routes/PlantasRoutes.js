@@ -81,5 +81,21 @@ router.get('/login', (req, res)=>{
     }
 })
 
+router.post('/usuario_info', (req, res)=>{
+    try {
+        const data = req.body;
+        db.query('SELECT * FROM usuario where usuario=?', [data.usuario], (error, result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+
 
 module.exports=router;

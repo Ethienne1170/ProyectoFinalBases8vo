@@ -10,15 +10,6 @@
 </head>
 
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-    crossorigin="anonymous"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       /*fetch('http://localhost:3500/pages/header')
@@ -35,27 +26,43 @@
       }
       var cerr = document.getElementById("cerrarSesion");
       var ini = document.getElementById("iniciarSesion");
+      var perfil = document.getElementById("perfil");
+      var n_usuario = document.getElementById("nombre_usuario");
+      var estad = document.getElementById("estadisticas");
+      var admini = document.getElementById("administrar");
       const usuarioCookie = getCookie('usuario');
+      const privilegiosCookie = getCookie('privilegios');
       if (usuarioCookie) {
         cerr.classList.remove("d-none");
         ini.classList.add("d-none");
+        perfil.classList.remove("d-none");
+        n_usuario.innerHTML = usuarioCookie;
         const tiempoDeVida = 60 * 60; //1 hora en seg
         // Crear una fecha de expiración
         const fechaDeExpiracion = new Date();
         fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
         const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
         document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
+        document.cookie = `privilegios=${privilegiosCookie}; ${expires}; path=/`;
 
         cerr.addEventListener('click', function (event) {
           event.preventDefault();
           // Borrar las cookies
           document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          document.cookie = 'privilegios=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
           // Redirigir al usuario a la página de inicio de sesión (o cualquier otra página)
           window.location.href = "http://localhost:3500";
         });
+        if (privilegiosCookie === "admin") {
+          estad.classList.remove("d-none");
+          admini.classList.remove("d-none");
+        }
       } else {
         cerr.classList.add("d-none");
         ini.classList.remove("d-none");
+        perfil.classList.add("d-none");
+        estad.classList.add("d-none");
+        admini.classList.add("d-none");
       }
     });
   </script>
@@ -76,13 +83,60 @@
               <a class="nav-link" href="invernaderos">Invernaderos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="perfil">Mi Perfil</a>
+              <a class="nav-link" href="foro">Foro</a>
+            </li>
+            <li class="nav-item dropdown d-none" id="perfil">
+              <a class="nav-link dropdown-toggle" id="nombre_usuario" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Link
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="perfil">Mi Perfil</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="inv_usuario">Mis Invernaderos</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown d-none" id="administrar">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Administrar
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="lista_usuarios">Usuarios</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="lista_plantas">Plantas</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="lista_invernaderos">Invernaderos</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown d-none" id="estadisticas">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Estadísticas
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="map_plantas">Mapa Plantas</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="map_invernaderos">Mapa Invernaderos</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="gr_usos">Gráfica Usos</a></li>
+              </ul>
             </li>
             <li class="nav-item d-none" id="cerrarSesion">
               <a class="nav-link" href="#">Cerrar Sesión</a>
             </li>
             <li class="nav-item d-none" id="iniciarSesion">
-              <a class="nav-link" href="http://localhost:3500">Iniciar Sesión</a>
+              <a class="nav-link" href="/">Iniciar Sesión</a>
             </li>
           </ul>
         </div>
@@ -125,6 +179,15 @@
 
 
   </div>
+
+  <footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"></script>
+  </footer>
 </body>
 
 </html>
