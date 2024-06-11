@@ -209,18 +209,52 @@
                     formulario.addEventListener("submit", function (event) {
                         event.preventDefault(); // Evita el envío del formulario
 
-                        var clave = document.getElementById("usuario").value;
+                        //var clave = document.getElementById("usuario").value;
 
                         const updateUsuario = {
+                            clave: formulario.clave.value,
                             nombre: formulario.nombre.value,
                             appaterno: formulario.appaterno.value,
                             apmaterno: formulario.apmaterno.value,
                             usuario: formulario.usuario.value,
-                            privilegios: formulario.password.value
+                            contrasena: formulario.password.value
                         };
 
+                        console.log(updateUsuario);
+                        if (updateUsuario.contrasena != "") {
+                            fetch("http://localhost:3000/plantas/update_usuario_pass", {
+                                method: "POST",
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(updateUsuario)
+                            })
+                                .then((response) => {
+                                    console.log(response);
+                                    if (!response.ok) {
+                                        throw new Error("Error en la solicitud: " + response.status);
+                                    } else {
+                                        window.location.href = "http://localhost:3500";
+                                    }
+                                    //return response.json(); // Convertir la respuesta a JSON
+                                })
+                        } else {
+                            fetch("http://localhost:3000/plantas/update_usuario", {
+                                method: "POST",
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(updateUsuario)
+                            })
+                                .then((response) => {
+                                    console.log(response);
+                                    if (!response.ok) {
+                                        throw new Error("Error en la solicitud: " + response.status);
+                                    } else {
+                                        window.location.href = "http://localhost:3500";
+                                    }
+                                    //return response.json(); // Convertir la respuesta a JSON
+                                })
+                        }
+
                         // Aquí puedes enviar los datos al servidor con fetch si es necesario
-                        // fetch(apiUrl, { method: "POST", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(nuevoUsuario) })
+
 
                         // Opcional: Reiniciar el formulario
                         // form.reset();
