@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            //verificar sesion
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+            var cerr = document.getElementById("cerrarSesion");
+            var ini = document.getElementById("iniciarSesion");
+            var perfil = document.getElementById("perfil");
+            var n_usuario = document.getElementById("nombre_usuario");
+            var estad = document.getElementById("estadisticas");
+            var admini = document.getElementById("administrar");
+            const usuarioCookie = getCookie('usuario');
+            const privilegiosCookie = getCookie('privilegios');
+            if (usuarioCookie) {
+                cerr.classList.remove("d-none");
+                ini.classList.add("d-none");
+                perfil.classList.remove("d-none");
+                n_usuario.innerHTML = usuarioCookie;
+                const tiempoDeVida = 60 * 60; //1 hora en seg
+                // Crear una fecha de expiración
+                const fechaDeExpiracion = new Date();
+                fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
+                const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
+                document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
+                document.cookie = `privilegios=${privilegiosCookie}; ${expires}; path=/`;
+
+                cerr.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    // Borrar las cookies
+                    document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    document.cookie = 'privilegios=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    // Redirigir al usuario a la página de inicio de sesión (o cualquier otra página)
+                    window.location.href = "http://localhost:3500";
+                });
+                if (privilegiosCookie === "admin") {
+                    estad.classList.remove("d-none");
+                    admini.classList.remove("d-none");
+                } else {
+                    window.location.href = "http://localhost:3500/pages/home";
+                }
+            } else {
+                cerr.classList.add("d-none");
+                ini.classList.remove("d-none");
+                perfil.classList.add("d-none");
+                estad.classList.add("d-none");
+                admini.classList.add("d-none");
+            }
+        });
+    </script>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="home">Inicio</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="plantas">Plantas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="invernaderos">Invernaderos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="foro">Foro</a>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="perfil">
+                            <a class="nav-link dropdown-toggle" id="nombre_usuario" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Link
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="perfil">Mi Perfil</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="inv_usuario">Mis Invernaderos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="administrar">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Administrar
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="lista_usuarios">Usuarios</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="lista_plantas">Plantas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="lista_invernaderos">Invernaderos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="estadisticas">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Estadísticas
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="map_plantas">Mapa Plantas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="map_invernaderos">Mapa Invernaderos</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="gr_usos">Gráfica Usos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item d-none" id="cerrarSesion">
+                            <a class="nav-link" href="#">Cerrar Sesión</a>
+                        </li>
+                        <li class="nav-item d-none" id="iniciarSesion">
+                            <a class="nav-link" href="/">Iniciar Sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <center>
+        <h1>Lista de Plantas</h1>
+    </center>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <table id="tablaPlt">
+                    <thead>
+                        <th>Clave</th>
+                        <th>Nombre</th>
+                        <th>Género</th>
+                        <th>Familia</th>
+                        <th>Clima</th>
+                        <th>Riego</th>
+                        <th>Iluminación</th>
+                        <th>Imagen</th>
+                    </thead>
+                    <tbody id="cuerpo">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // URL de la API
+            const apiUrl = "http://localhost:3000/plantas/plantas";
+
+            // Contenedor donde se mostrarán los datos
+            const tabla = document.getElementById("cuerpo");
+
+            // Función para crear una tarjeta (card) para cada planta
+            function llenarTabla(plantas) {
+                const ren = document.createElement("tr");
+                var col1 = document.createElement("td");
+                col1.innerHTML = plantas.clave;
+                ren.appendChild(col1);
+                var col2 = document.createElement("td");
+                col2.innerHTML = plantas.nombre;
+                ren.appendChild(col2);
+                var col3 = document.createElement("td");
+                col3.innerHTML = plantas.genero;
+                ren.appendChild(col3);
+                var col4 = document.createElement("td");
+                col4.innerHTML = plantas.familia;
+                ren.appendChild(col4);
+                var col5 = document.createElement("td");
+                col5.innerHTML = plantas.clima;
+                ren.appendChild(col5);
+                var col6 = document.createElement("td");
+                col6.innerHTML = plantas.riego_frecuencia;
+                ren.appendChild(col6);
+                var col7 = document.createElement("td");
+                col7.innerHTML = plantas.iluminacion;
+                ren.appendChild(col7);
+                var col8 = document.createElement("td");
+                const img = document.createElement("img");
+                img.src=plantas.url_imagen;
+                img.height=30;
+                img.width=30;
+                col8.appendChild(img);
+                ren.appendChild(col8);
+
+                tabla.appendChild(ren);
+            }
+            // Usar fetch para obtener los datos de la API
+            fetch(apiUrl)
+                .then((response) => {
+                    console.log(response);
+                    if (!response.ok) {
+                        throw new Error("Error en la solicitud: " + response.status);
+                    }
+                    return response.json(); // Convertir la respuesta a JSON
+                })
+                .then((data) => {
+                    // Suponiendo que data es un array de plantas
+                    data.forEach((plantas) => llenarTabla(plantas));
+                    $('#tablaPlt').DataTable();
+                })
+                .catch((error) => {
+                    console.error("Hubo un problema con la solicitud fetch:", error);
+                    plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
+                });
+        });
+    </script>
+
+    <footer>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+            crossorigin="anonymous"></script>
+    </footer>
+</body>
+
+</html>
