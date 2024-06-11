@@ -10,35 +10,105 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Inicio</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="pages/plantas">Plantas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pages/invernaderos">Invernaderos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="pages/Perfil">Perfil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            //verificar sesion
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+            var cerr = document.getElementById("cerrarSesion");
+            var ini = document.getElementById("iniciarSesion");
+            var perfil = document.getElementById("perfil");
+            var n_usuario = document.getElementById("nombre_usuario");
+            var estad = document.getElementById("estadisticas");
+            const usuarioCookie = getCookie('usuario');
+            const privilegiosCookie = getCookie('privilegios');
+            if (usuarioCookie) {
+                window.location.href = "http://localhost:3500/pages/home"; //QUITAR esta linea si se tiene este script en otra pagina
+                cerr.classList.remove("d-none");
+                ini.classList.add("d-none");
+                perfil.classList.remove("d-none");
+                n_usuario.innerHTML = usuarioCookie;
+                const tiempoDeVida = 60 * 60; //1 hora en seg
+                // Crear una fecha de expiración
+                const fechaDeExpiracion = new Date();
+                fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
+                const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
+                document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
+                document.cookie = `privilegios=${privilegiosCookie}; ${expires}; path=/`;
 
+                cerr.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    // Borrar las cookies
+                    document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    document.cookie = 'privilegios=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    // Redirigir al usuario a la página de inicio de sesión (o cualquier otra página)
+                    window.location.href = "http://localhost:3500";
+                });
+                if (privilegiosCookie === "admin") {
+                    estad.classList.remove("d-none");
+                }
+            } else {
+                cerr.classList.add("d-none");
+                ini.classList.remove("d-none");
+                perfil.classList.add("d-none");
+                estad.classList.add("d-none");
+            }
+        });
+    </script>
+
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="pages/home">Inicio</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/plantas">Plantas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/invernaderos">Invernaderos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="pages/foro">Foro</a>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="perfil">
+                            <a class="nav-link dropdown-toggle" id="nombre_usuario" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Link
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="pages/perfil">Mi Perfil</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="pages/inv_usuario">Mis Invernaderos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item d-none" id="estadisticas">
+                            <a class="nav-link" href="pages/estadisticas">Estadísticas</a>
+                        </li>
+                        <li class="nav-item d-none" id="cerrarSesion">
+                            <a class="nav-link" href="#">Cerrar Sesión</a>
+                        </li>
+                        <li class="nav-item d-none" id="iniciarSesion">
+                            <a class="nav-link" href="/">Iniciar Sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <br>
+    <center>
+        <h1>Inicio de Sesión</h1>
+    </center>
     <div class="container">
         <div class="row">
             <div class="col-3"></div>
@@ -57,7 +127,12 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary mb-3">Entrar</button>
+                        <center>
+                            <button type="submit" class="btn btn-primary mb-3">Entrar</button>
+                        </center>
+                    </div>
+                    <div class="col-auto">
+                        <a href="#">¿Aún no estás registrado?</a>
                     </div>
                 </form>
             </div>
@@ -69,25 +144,6 @@
         document.addEventListener("DOMContentLoaded", function () {
             const formulario = document.getElementById("formLogin");
 
-            function getCookie(name) {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            }
-
-            // Verificar si existe la cookie 'nombre' y 'email'
-            const usuarioCookie = getCookie('usuario');
-
-            if (usuarioCookie) {
-                const tiempoDeVida = 60 * 60; //1 hora en seg
-                // Crear una fecha de expiración
-                const fechaDeExpiracion = new Date();
-                fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
-                const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
-                document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
-                window.location.href = "http://localhost:3500/pages/home";
-            }
-
             formulario.addEventListener("submit", function (event) {
                 // Prevenir el envío del formulario
                 event.preventDefault();
@@ -97,7 +153,7 @@
                 const pass = document.getElementById("contrasena").value;
 
                 function verifUser(usuario) {
-                    console.log("us: " + usuario.usuario + "  pass: " + usuario.contrasena);
+                    //console.log("us: " + usuario.usuario + "  pass: " + usuario.contrasena);
                     if (usuario.usuario === user && usuario.contrasena === pass) {
                         const tiempoDeVida = 60 * 60; //1 hora en seg
 
@@ -107,6 +163,7 @@
                         const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
 
                         document.cookie = `usuario=${user}; ${expires}; path=/`;
+                        document.cookie = `privilegios=${usuario.privilegios}; ${expires}; path=/`;
                         //document.cookie = `email=${email}; path=/`;
                         window.location.href = "http://localhost:3500/pages/home";
                     }

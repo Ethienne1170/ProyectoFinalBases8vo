@@ -12,7 +12,8 @@ app.use(express.json());
 
 app.use('/plantas', plantas);
 app.use('/invernaderos', plantas);
-app.use('/usuario', plantas);
+app.use('/usuarios', plantas);
+app.use('/list_inver', plantas);
 app.use('/login', plantas);
 
 app.listen(3000,()=>{

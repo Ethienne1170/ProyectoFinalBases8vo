@@ -27,6 +27,17 @@ router.get('/header', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/header.html'))
 })
 
+router.get('/lista_usuarios', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/lista_usuarios.html'))
+})
+
+router.get('/lista_plantas', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/lista_plantas.html'))
+})
+
+router.get('/lista_invernaderos', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/lista_invernaderos.html'))
+})
 
 
 module.exports=router;
