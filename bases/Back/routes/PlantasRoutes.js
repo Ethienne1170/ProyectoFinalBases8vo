@@ -6,6 +6,7 @@ const db = require('../modules/conexionDB');
 
 router.get('/plantas', (req, res) => {
     try {
+        console.log('hola')
         db.query('SELECT * FROM plantahongoarbolcatus', (error, result) => {
             if (error) {
                 res.json(error);
