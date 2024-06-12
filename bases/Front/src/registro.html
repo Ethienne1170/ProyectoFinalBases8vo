@@ -12,12 +12,6 @@
 <body>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            /*fetch('http://localhost:3500/pages/header')
-              .then(response => response.text())
-              .then(data => {
-                document.querySelector('header').innerHTML = data;
-              });*/
-
             //verificar sesion
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
@@ -33,6 +27,7 @@
             const usuarioCookie = getCookie('usuario');
             const privilegiosCookie = getCookie('privilegios');
             if (usuarioCookie) {
+                window.location.href = "http://localhost:3500/pages/home";
                 cerr.classList.remove("d-none");
                 ini.classList.add("d-none");
                 perfil.classList.remove("d-none");
@@ -149,32 +144,35 @@
             <div class="col"></div>
             <div class="col-10">
                 <form id="formu">
-                    <input type="hidden" id="clave" name="clave">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label"><b>Nombre</b></label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="emailHelp">
+                        <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="emailHelp"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label"><b>Apellido Paterno</b></label>
                         <input type="text" class="form-control" id="appaterno" name="appaterno"
-                            aria-describedby="emailHelp">
+                            aria-describedby="emailHelp" required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label"><b>Apellido Materno</b></label>
                         <input type="text" class="form-control" id="apmaterno" name="apmaterno"
-                            aria-describedby="emailHelp">
+                            aria-describedby="emailHelp" required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label"><b>Nombre de Usuario</b></label>
-                        <input type="text" class="form-control" id="usuario" name="usuario"
-                            aria-describedby="emailHelp" disabled>
+                        <input type="text" class="form-control" id="usuario" name="usuario" aria-describedby="emailHelp"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label"><b>Contraseña</b></label>
-                        <input type="password" class="form-control" id="password" name="password">
+                        <input type="password" class="form-control" id="password" name="password" required>
                         <div id="emailHelp" class="form-text">Dejar este campo vacío no cambiará la contraseña.</div>
                     </div>
                     <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <div class="mb-3 d-none alert alert-danger" role="alert" id="alerta">
+                        <div class="form-text">El nombre de usuario ya existe.</div>
+                    </div>
                 </form>
             </div>
 
@@ -188,105 +186,67 @@
     <footer>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const apiUrl = "http://localhost:3000/plantas/usuario_info";
+                const apiUrl = "http://localhost:3000/plantas/registro";
 
-                function getCookie(name) {
-                    const value = `; ${document.cookie}`;
-                    const parts = value.split(`; ${name}=`);
-                    if (parts.length === 2) return parts.pop().split(';').shift();
-                }
-                const usuarioCookie = getCookie('usuario');
+                formulario = document.getElementById("formu");
+                formulario.addEventListener("submit", function (event) {
+                    event.preventDefault(); // Evita el envío del formulario
 
-                // Función para crear una tarjeta (card) para cada planta
-                function llenarUsuario(inver) {
-                    document.getElementById("clave").value = inver.clave;
-                    document.getElementById("nombre").value = inver.nombre;
-                    document.getElementById("appaterno").value = inver.appaterno;
-                    document.getElementById("apmaterno").value = inver.apmaterno;
-                    document.getElementById("usuario").value = inver.usuario;
+                    const updateUsuario = {
+                        nombre: formulario.nombre.value,
+                        appaterno: formulario.appaterno.value,
+                        apmaterno: formulario.apmaterno.value,
+                        usuario: formulario.usuario.value,
+                        contrasena: formulario.password.value,
+                        estatus: "Activo",
+                        privilegios: "usuario"
+                    };
 
-                    formulario = document.getElementById("formu");
-                    formulario.addEventListener("submit", function (event) {
-                        event.preventDefault(); // Evita el envío del formulario
+                    const nomUsuario = {
+                        usuario: formulario.usuario.value,
+                    };
 
-                        //var clave = document.getElementById("usuario").value;
-
-                        const updateUsuario = {
-                            clave: formulario.clave.value,
-                            nombre: formulario.nombre.value,
-                            appaterno: formulario.appaterno.value,
-                            apmaterno: formulario.apmaterno.value,
-                            usuario: formulario.usuario.value,
-                            contrasena: formulario.password.value
-                        };
-
-                        console.log(updateUsuario);
-                        if (updateUsuario.contrasena != "") {
-                            fetch("http://localhost:3000/plantas/update_usuario_pass", {
-                                method: "POST",
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(updateUsuario)
-                            })
-                                .then((response) => {
-                                    console.log(response);
-                                    if (!response.ok) {
-                                        throw new Error("Error en la solicitud: " + response.status);
-                                    } else {
-                                        window.location.href = "http://localhost:3500";
-                                    }
-                                    //return response.json(); // Convertir la respuesta a JSON
-                                })
-                        } else {
-                            fetch("http://localhost:3000/plantas/update_usuario", {
-                                method: "POST",
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(updateUsuario)
-                            })
-                                .then((response) => {
-                                    console.log(response);
-                                    if (!response.ok) {
-                                        throw new Error("Error en la solicitud: " + response.status);
-                                    } else {
-                                        window.location.href = "http://localhost:3500";
-                                    }
-                                    //return response.json(); // Convertir la respuesta a JSON
-                                })
-                        }
-
-                        // Aquí puedes enviar los datos al servidor con fetch si es necesario
-
-
-                        // Opcional: Reiniciar el formulario
-                        // form.reset();
-                    });
-                }
-
-                const data = {
-                    usuario: usuarioCookie
-                };
-                // Usar fetch para obtener los datos de la API
-                fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                    .then((response) => {
-                        console.log(response);
-                        if (!response.ok) {
-                            throw new Error("Error en la solicitud: " + response.status);
-                        }
-                        return response.json(); // Convertir la respuesta a JSON
+                    fetch("http://localhost:3000/plantas/usuario_info", {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(nomUsuario)
                     })
-                    .then((data) => {
-                        // Suponiendo que data es un array de plantas
-                        data.forEach((usuario) => llenarUsuario(usuario));
-                    })
-                    .catch((error) => {
-                        console.error("Hubo un problema con la solicitud fetch:", error);
-                        plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
-                    });
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Error en la solicitud: " + response.status);
+                            }
+                            return response.json(); // Convertir la respuesta a JSON
+                        })
+                        .then((data) => {
+                            console.log(data.length);
+                            if (data.length == 0) {
+                                console.log(updateUsuario);
+                                fetch(apiUrl, {
+                                    method: "POST",
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(updateUsuario)
+                                })
+                                    .then((response) => {
+                                        console.log(response);
+                                        if (!response.ok) {
+                                            throw new Error("Error en la solicitud: " + response.status);
+                                        } else {
+                                            window.location.href = "http://localhost:3500";
+                                        }
+                                        //return response.json(); // Convertir la respuesta a JSON
+                                    })
+                            }else{
+                                document.getElementById("alerta").classList.remove("d-none");
+                            }
+                            // Suponiendo que data es un array de plantas
+                            //data.forEach((usuario) => registrar(usuario));
+                        })
+                        .catch((error) => {
+                            console.error("Hubo un problema con la solicitud fetch:", error);
+                            plantasContainer.innerHTML = "<p>Error al obtener los datos.</p>";
+                        });
+                });
+
             });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
