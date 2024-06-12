@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Document</title>
+
+    <style>
+        .caja{
+            border: 1px solid gray;
+            margin: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            /*fetch('http://localhost:3500/pages/header')
+              .then(response => response.text())
+              .then(data => {
+                document.querySelector('header').innerHTML = data;
+              });*/
+
+            //verificar sesion
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+            var cerr = document.getElementById("cerrarSesion");
+            var ini = document.getElementById("iniciarSesion");
+            var perfil = document.getElementById("perfil");
+            var n_usuario = document.getElementById("nombre_usuario");
+            var estad = document.getElementById("estadisticas");
+            var admini = document.getElementById("administrar");
+            const usuarioCookie = getCookie('usuario');
+            const privilegiosCookie = getCookie('privilegios');
+            if (usuarioCookie) {
+                cerr.classList.remove("d-none");
+                ini.classList.add("d-none");
+                perfil.classList.remove("d-none");
+                n_usuario.innerHTML = usuarioCookie;
+                const tiempoDeVida = 60 * 60; //1 hora en seg
+                // Crear una fecha de expiración
+                const fechaDeExpiracion = new Date();
+                fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
+                const expires = `expires=${fechaDeExpiracion.toUTCString()}`;
+                document.cookie = `usuario=${usuarioCookie}; ${expires}; path=/`;
+                document.cookie = `privilegios=${privilegiosCookie}; ${expires}; path=/`;
+
+                cerr.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    // Borrar las cookies
+                    document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    document.cookie = 'privilegios=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+                    // Redirigir al usuario a la página de inicio de sesión (o cualquier otra página)
+                    window.location.href = "http://localhost:3500";
+                });
+                if (privilegiosCookie === "admin") {
+                    estad.classList.remove("d-none");
+                    admini.classList.remove("d-none");
+                }
+            } else {
+                cerr.classList.add("d-none");
+                ini.classList.remove("d-none");
+                perfil.classList.add("d-none");
+                estad.classList.add("d-none");
+                admini.classList.add("d-none");
+            }
+        });
+    </script>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="home">Inicio</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="plantas">Plantas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="invernaderos">Invernaderos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="foro">Foro</a>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="perfil">
+                            <a class="nav-link dropdown-toggle" id="nombre_usuario" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Link
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="perfil">Mi Perfil</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="inv_usuario">Mis Invernaderos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="administrar">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Administrar
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="lista_usuarios">Usuarios</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="lista_plantas">Plantas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="lista_invernaderos">Invernaderos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown d-none" id="estadisticas">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Estadísticas
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="map_plantas">Mapa Plantas</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="map_invernaderos">Mapa Invernaderos</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="gr_usos">Gráfica Usos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item d-none" id="cerrarSesion">
+                            <a class="nav-link" href="#">Cerrar Sesión</a>
+                        </li>
+                        <li class="nav-item d-none" id="iniciarSesion">
+                            <a class="nav-link" href="/">Iniciar Sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <form action="" id="formPlanta">
+                <label for="Nombre" class="form-label">Nombre: </label>
+                <input type="text" name="Nombre" id="Nombre" class="form-control">
+
+                <label for="Genero" class="form-label">Genero: </label>
+                <input type="text" name="Genero" id="Genero" class="form-control">
+
+                <label for="Familia" class="form-label">Familia: </label>
+                <input type="text" name="Familia" id="Familia" class="form-control">
+
+                <label for="Extinta" class="form-label">Extinta: </label>
+                <select name="Extinta" id="Extinta" class="form-select">
+                    <option value="0">NO</option>
+                    <option value="1">SI</option>
+                </select>
+
+                <label for="Clima" class="form-label">Clima: </label>
+                <select name="Clima" id="Clima" class="form-select">
+                    <option value="Templado húmedo">Templado húmedo</option>
+                    <option value="Templado">Templado</option>
+                    <option value="Cálido">Cálido</option>
+                    <option value="Árido">Árido</option>
+                    <option value="Tropical">Tropical</option>
+                    <option value="Mediterráneo">Mediterráneo</option>
+                    <option value="Frío">Frío</option>
+                </select>
+
+                <label for="Riego" class="form-label">Frecuencia de Riego: </label>
+                <select name="Riego" id="Riego" class="form-select">
+                    <option value="Frecuente">Frecuente</option>
+                    <option value="Moderado">Moderado</option>
+                    <option value="Escaso">Escaso</option>
+                </select>
+
+                <label for="Iluminacion" class="form-label">Nivel de Iluminacion: </label>
+                <select name="Iluminacion" id="Iluminacion" class="form-select">
+                    <option value="Sol directo">Sol directo</option>
+                    <option value="Luz indirecta">Luz indirecta</option>
+                    <option value="Sombra parcial">Sombra parcial</option>
+                    <option value="Sombra Total">Sombra Total</option>
+                </select>
+
+                <label for="URL" class="form-label">URL: </label>
+                <input type="text" name="URL" id="URL" class="form-control">
+
+                <div id="usos">
+                    <h1>Usos: </h1>
+                    <div class="row caja" id="rowUso1">
+                        <label for="TipoUso" class="form-label">Tipo de Uso: </label>
+                        <select name="TipoUso" id="TipoUso" class="form-select">
+                            <option value="Alimentación">Alimentación</option>
+                            <option value="Ambiental">Ambiental</option>
+                            <option value="Aromaterapia">Aromaterapia</option>
+                            <option value="Aromatizante">Aromatizante</option>
+                            <option value="Artesanía">Artesanía</option>
+                            <option value="Artístico">Artístico</option>
+                            <option value="Bonsái">Bonsái</option>
+                            <option value="Carpintería">Carpintería</option>
+                            <option value="Ceremonial">Ceremonial</option>
+                            <option value="Acuariofilia">Acuariofilia</option>
+                        </select>
+    
+                        <label for="DescripcionUso" class="form-label">Descripcion de Uso: </label>
+                        <input type="text" name="DescripcionUso" id="DescripcionUso" class="form-control">
+    
+                        <label for="CantidadUso" class="form-label">Cantidad de Uso: </label>
+                        <input type="number" name="CantidadUso" id="CantidadUso" class="form-control">
+                    </div>
+                </div>
+
+                <div id="origenes">
+                    <h1>Origenes: </h1>
+                    <div class="row caja" id="rowOrigen1">
+                        <label for="Estado" class="form-label">Estado de origen: </label>
+                        <select name="Estado" id="Estado" class="form-select">
+                            <option value="Aguascalientes">Aguascalientes</option>
+                            <option value="Baja California">Baja California</option>
+                            <option value="Baja California Sur">Baja California Sur</option>
+                            <option value="Campeche">Campeche</option>
+                            <option value="Chiapas">Chiapas</option>
+                            <option value="Coahuila">Coahuila</option>
+                            <option value="Chihuahua">Chihuahua</option>
+                            <option value="Ciudad de México">Ciudad de México</option>
+                            <option value="Colima">Colima</option>
+                            <option value="Durango">Durango</option>
+                            <option value="Estado de México">Estado de México</option>
+                            <option value="Guanajuato">Guanajuato</option>
+                            <option value="Guerrero">Guerrero</option>
+                            <option value="Hidalgo">Hidalgo</option>
+                            <option value="Jalisco">Jalisco</option>
+                            <option value="Michoacan">Michoacán</option>
+                            <option value="Morelos">Morelos</option>
+                            <option value="Nayarit">Nayarit</option>
+                            <option value="Nuevo Leon">Nuevo León</option>
+                            <option value="Oaxaca">Oaxaca</option>
+                            <option value="Puebla">Puebla</option>
+                            <option value="Queretaro">Querétaro</option>
+                            <option value="Quintana Roo">Quintana Roo</option>
+                            <option value="San Luis Potosi">San Luis Potosí</option>
+                            <option value="Sinaloa">Sinaloa</option>
+                            <option value="Sonora">Sonora</option>
+                            <option value="Tabasco">Tabasco</option>
+                            <option value="Tamaulipas">Tamaulipas</option>
+                            <option value="Tlaxcala">Tlaxcala</option>
+                            <option value="Veracruz">Veracruz</option>
+                            <option value="Yucatan">Yucatán</option>
+                            <option value="Zacatecas">Zacatecas</option>
+                        </select>
+    
+                        <label for="Region" class="form-label">Descripcion de Uso: </label>
+                        <select name="" id="" class="form-select">
+                            <option value="Norte">Norte</option>
+                            <option value="Sur">Sur</option>
+                            <option value="Este">Este</option>
+                            <option value="Oeste">Oeste</option>
+                            <option value="Noroeste">Noroeste</option>
+                            <option value="Noreste">Noreste</option>
+                            <option value="Suroeste">Suroeste</option>
+                            <option value="Sureste">Sureste</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-warning" id="añadirUso" type="button">Añadir uso</button>
+                <button class="btn btn-outline-warning" id="añadirOrigen" type="button">Añadir origen</button>
+                <button class="btn btn-outline-success" id="crear" type="submit">Crear</button>
+            </form>
+            
+        </div>
+    </div>
+    <br><br><br><br>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let numeroUsos = 1;
+            let numeroOrigenes = 1;
+            let formulario = document.getElementById("formPlanta");
+
+            let añadirUso = document.getElementById("añadirUso");
+            let añadirOrigen = document.getElementById("añadirOrigen");
+
+            añadirUso.addEventListener("click", function(){
+                numeroUsos++;
+                let row1 = document.getElementById("rowUso1")
+                let clone = row1.cloneNode(true)
+                clone.id = "rowUso" + numeroUsos;
+                let usos = document.getElementById("usos")
+                usos.appendChild(clone)
+
+            })
+
+            añadirOrigen.addEventListener("click", function(){
+                numeroOrigenes++;
+                let row1 = document.getElementById("rowOrigen1")
+                let clone = row1.cloneNode(true)
+                clone.id = "rowOrigen" + numeroOrigenes;
+                let usos = document.getElementById("origenes")
+                usos.appendChild(clone)
+
+            })
+
+
+        })
+    </script>
+
+    <footer>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+            crossorigin="anonymous"></script>
+    </footer>
+</body>
+
+</html>
