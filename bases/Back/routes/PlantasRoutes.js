@@ -207,7 +207,7 @@ router.get('/misinvernaderos', (req, res) => {
 )
 router.post('/newInvernadero', (req, res) => {
     console.log(req.body);
-    const { nombre, numeroExterior, numeroInterior, calle, estado, region, user } = req.body;
+    const { nombre, numeroExterior, numeroInterior, calle, estado, region, user , latitud, longitud} = req.body;
     //res.json('hola mundo')
 
     db.query('SELECT MAX(clave) as maxId FROM usuario', (error, results) => {
@@ -218,8 +218,8 @@ router.post('/newInvernadero', (req, res) => {
 
         const maxId = results[0].maxId || 0; // Si no hay registros, maxId será null
         const newId = maxId + 1;
-        db.query('INSERT INTO `invernadero`(`clave`, `claveusuario`, `nombre`, `numeroext`, `numeroint`, `calle`, `estado`, `region`) VALUES (?,?,?,?,?,?,?,?)',
-            [newId, user, nombre, numeroExterior, numeroInterior, calle, estado, region], (error, result) => {
+        db.query('INSERT INTO invernadero(clave, claveusuario, nombre,numeroext,numeroint, calle, estado, region,latitud, longitud) VALUES (?,?,?,?,?,?,?,?,?,?)',
+            [newId, user, nombre, numeroExterior, numeroInterior, calle, estado, region,latitud,longitud], (error, result) => {
                 if (error) {
                     res.json(error);
                     return;
@@ -429,4 +429,22 @@ router.get("/comentariosPublicacion", (req, res) => {
         res.json(error)
     }
 });
+
+router.get('/usos', (req, res) => {
+    const { user } = req.query;
+    console.log(req.query)
+    try {
+        db.query('SELECT * FROM usos u WHERE u.ClavePH=?', [user], (err, result) => {
+            if(err){
+                res.json(error)
+                return
+            }
+            res.json(result);
+    })
+    } catch (error) {
+        res.json(error)
+    }
+
+})
+
 module.exports = router;
