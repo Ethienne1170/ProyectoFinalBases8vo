@@ -226,9 +226,21 @@ router.post('/newInvernadero',(req,res)=>{
             res.status(200).json('para cambiarlo todo, hay que dejar todo como esta');
         })
     });
-
     
     
+})
+router.post('/insertPlantaInv',(req,res)=>{
+        console.log(req.body);
+        //res.json('amanda');
+        const {cantidad, invernaderos,clave}=req.body;
+        db.query('INSERT INTO inventario(claveinvernadero, claveph, cantidad) VALUES (?,?,?)',
+            [invernaderos,clave,cantidad],(err,result)=>{
+            if (err) {
+                res.json(err)
+                return;
+            }
+            res.status(200).json(result)
+        })
 })
 
 
