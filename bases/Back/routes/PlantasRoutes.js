@@ -448,10 +448,11 @@ router.get('/usos', (req, res) => {
 })
 
 router.get('/posecion', (req, res) => {
-    const {clave}=req.query;
+    const {user}=req.query;
+    console.log(req.query);
     try {
         db.query('SELECT  ph.nombre, p.cantidad FROM posesion p, usuario c, plantahongoarbolcatus ph WHERE p.claveusuario=c.clave and p.claveph=ph.clave and c.clave=? '
-            ,[clave],(err,result)=>{
+            ,[user],(err,result)=>{
                 if (err) {
                     res.json(err)
                 }
@@ -464,10 +465,11 @@ router.get('/posecion', (req, res) => {
     }
 })
 router.post('/agregarMisPlantas', (req, res) => {
-    const {clave,claveph,cnt}=req.query;
+    const {usr, clave ,cantidad}=req.body;
+    console.log(req.body);
     try {
         db.query('INSERT INTO posesion(claveusuario, claveph, cantidad) VALUES (?,?,?)'
-            ,[clave,claveph,cnt],(err,result)=>{
+            ,[usr, clave ,cantidad],(err,result)=>{
                 if (err) {
                     res.json(err)
                 }
