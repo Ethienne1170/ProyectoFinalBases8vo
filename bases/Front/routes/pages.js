@@ -37,6 +37,10 @@ router.get('/lista_invernaderos', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/lista_invernaderos.html'))
 })
 
+router.get('/crear_plantas', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/crearPlanta.html'))
+})
+
 router.get('/registro', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/registro.html'))
 })
