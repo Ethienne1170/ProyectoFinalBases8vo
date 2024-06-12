@@ -198,7 +198,11 @@
         `;
 
         card.addEventListener("click", () => {
-          alert(inver.clave);
+        //  alert(inver.clave);
+          const url = 'invernadero?id='+inver.clave;
+                // Redireccionar a la URL
+                console.log(url)
+                window.location.href = url;
         });
 
         inverContainer.appendChild(card);
