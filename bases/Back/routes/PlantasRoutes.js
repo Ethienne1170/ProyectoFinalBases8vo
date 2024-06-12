@@ -131,5 +131,36 @@ router.get('/invernaderoplanta',(req, res)=>{
     }
 })
 
+router.post('/update_usuario', (req, res)=>{
+    try {
+        const data = req.body;
+        db.query('UPDATE usuario SET nombre=?, appaterno=?, apmaterno=?, usuario=? where clave=?', [data.nombre, data.appaterno, data.apmaterno, data.usuario, data.clave], (error, result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+
+router.post('/update_usuario_pass', (req, res)=>{
+    try {
+        const data = req.body;
+        db.query('UPDATE usuario SET nombre=?, appaterno=?, apmaterno=?, usuario=?, contrasena=? where clave=?', [data.nombre, data.appaterno, data.apmaterno, data.usuario, data.contrasena, data.clave], (error, result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
 
 module.exports=router;
