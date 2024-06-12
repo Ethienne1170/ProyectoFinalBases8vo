@@ -11,4 +11,8 @@ router.get('/perfil',(req,res)=>{
     res.sendFile(path.resolve(__dirname, '../src/perfil/perfil.html'));
 })
 
+router.get('/publicacion',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/publicacion/publicacion.html'));
+})
+
 module.exports=router;
