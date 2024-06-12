@@ -447,4 +447,38 @@ router.get('/usos', (req, res) => {
 
 })
 
+router.get('/posecion', (req, res) => {
+    const {clave}=req.query;
+    try {
+        db.query('SELECT  ph.nombre, p.cantidad FROM posesion p, usuario c, plantahongoarbolcatus ph WHERE p.claveusuario=c.clave and p.claveph=ph.clave and c.clave=? '
+            ,[clave],(err,result)=>{
+                if (err) {
+                    res.json(err)
+                }
+                res.status(200).json(result);
+            }
+        )
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+router.post('/agregarMisPlantas', (req, res) => {
+    const {clave,claveph,cnt}=req.query;
+    try {
+        db.query('INSERT INTO posesion(claveusuario, claveph, cantidad) VALUES (?,?,?)'
+            ,[clave,claveph,cnt],(err,result)=>{
+                if (err) {
+                    res.json(err)
+                }
+                res.status(200).json("hola Caleb");
+            }
+        )
+    } catch (error) {
+        console.log(error)
+        res.json(error);
+    }
+})
+
+
 module.exports = router;
