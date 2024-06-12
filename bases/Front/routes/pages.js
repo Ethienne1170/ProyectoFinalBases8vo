@@ -47,6 +47,8 @@ router.get('/registro', (req, res)=>{
 router.get('/inv_usuario', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/invuser.html'))
 })
-
+router.get('/foro',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/publicacion/publicacion.html'));
+})
 
 module.exports=router;

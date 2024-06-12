@@ -123,8 +123,17 @@ ALTER TABLE `posesion`
 ALTER TABLE `ubicacionorigen`
   ADD PRIMARY KEY (`claveph`);
 
+ALTER TABLE `publicacion`
+  ADD PRIMARY KEY (`clave`);
+
+ALTER TABLE `comentario`
+  ADD PRIMARY KEY (`clave`);
+
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`clave`);
+  
+ALTER TABLE `usos`
+  ADD PRIMARY KEY (`IdUso`);
 
 ALTER TABLE `plantahongoarbolcatus`
   MODIFY `clave` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=501;
@@ -1144,7 +1153,6 @@ INSERT INTO `plantahongoarbolcatus` (`clave`, `nombre`, `genero`, `familia`, `ex
 (498, 'Cactus Head', 'Notocactus', 'Cactaceae', 0, 'Arido', 'Moderado', 'Sol directo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThg60Xa543g1zpOCUqmWIkkl07b_PfqfEafz8uR8Cr2mnp3MeXPHNJU3FP0m0&s'),
 (499, 'Frasers Ball Cactus', 'Parodia', 'Cactaceae', 0, 'Arido', 'Bajo', 'Sol directo', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSozPMDnn2rgP-bXMCDiOUg7zby20A-AVCjB8HAEC-3aK398DyaNkVsSGQ0rIU&s'),
 (500, 'Senile Head', 'Rebutia', 'Cactaceae', 0, 'Subtropical', 'Moderado', 'Sol parcial', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyzFXlkasA-zR54fKp4hpUTUgGXqnccgeVQdVQgDGP6iCWjJy6sWFjEe0Qqg&s');
-
 
 INSERT INTO `publicacion` (`clave`, `claveusuario`, `fecha`, `contenido`) VALUES
 (1, 187, '2017-03-29 11:04:50', '¿Cuál es el vegetal más romántico? ¡La alcachofa, porque siempre tiene corazón!'),
