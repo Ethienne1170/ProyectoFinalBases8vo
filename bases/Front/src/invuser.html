@@ -14,13 +14,7 @@
 <body>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            /*fetch('http://localhost:3500/pages/header')
-              .then(response => response.text())
-              .then(data => {
-                document.querySelector('header').innerHTML = data;
-              });*/
-
-            //verificar sesion
+            // Verificar sesión
             function getCookie(name) {
                 const value = `; ${document.cookie}`;
                 const parts = value.split(`; ${name}=`);
@@ -35,14 +29,14 @@
 
             const usuarioCookie = getCookie('usuario');
             const privilegiosCookie = getCookie('privilegios');
-            const clave=getCookie('claveUser');
+            const clave = getCookie('claveUser');
             console.log(clave);
             if (usuarioCookie) {
                 cerr.classList.remove("d-none");
                 ini.classList.add("d-none");
                 perfil.classList.remove("d-none");
                 n_usuario.innerHTML = usuarioCookie;
-                const tiempoDeVida = 60 * 60; //1 hora en seg
+                const tiempoDeVida = 60 * 60; // 1 hora en seg
                 // Crear una fecha de expiración
                 const fechaDeExpiracion = new Date();
                 fechaDeExpiracion.setTime(fechaDeExpiracion.getTime() + (tiempoDeVida * 1000));
@@ -92,10 +86,7 @@
                             <td>${planta.region}</td>
                         `;
                         tr.addEventListener("click", () => {
-                            //  alert(inver.clave);
                             const url = 'invernadero?id=' + planta.clave;
-                            // Redireccionar a la URL
-                            console.log(url)
                             window.location.href = url;
                         });
 
@@ -106,10 +97,48 @@
                 .catch(error => {
                     console.error('Hubo un problema con la solicitud fetch:', error);
                 });
+
+            // Manejar el envío del formulario
+            const form = document.getElementById('invernaderoForm');
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Evitar que el formulario se envíe de forma predeterminada
+
+                const formData = new FormData(form);
+                const data = {};
+                const clave = getCookie('claveUser');
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+                if (clave) {
+                    data['user'] = clave;
+                } else {
+                    console.error('Clave del usuario no definida');
+                    return;
+                }
+
+                fetch('http://localhost:3000/plantas/newInvernadero', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Invernadero creado:', data);
+                        // Aquí puedes actualizar la lista de invernaderos o mostrar un mensaje de éxito
+                    })
+                    .catch(error => {
+                        console.error('Hubo un problema con la solicitud fetch:', error);
+                    });
+            });
+
         });
-
-
-
     </script>
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -204,33 +233,45 @@
                 </div>
             </div>
             <div class="row">
-                <di class="col-4"></di>
-                <di class="col-4">
-                   <form>
-                    <h3>Nuevo Invernadero</h3>
-                    <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </form> 
-                </di>
-                <di class="col-4"></di>
-                
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <form id="invernaderoForm">
+                        <h3>Nuevo Invernadero</h3>
+                        <div class="mb-3">
+                            <label for="Nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="Nombre" name="nombre" aria-describedby="Nombre">
+                        </div>
+                        <div class="mb-3">
+                            <label for="numeroext" class="form-label">Numero Exterior</label>
+                            <input type="number" class="form-control" id="numeroext" name="numeroExterior">
+                        </div>
+                        <div class="mb-3">
+                            <label for="numeroint" class="form-label">Numero Interior</label>
+                            <input type="number" class="form-control" id="numeroint" name="numeroInterior">
+                        </div>
+                        <div class="mb-3">
+                            <label for="calle" class="form-label">Calle</label>
+                            <input type="text" class="form-control" id="calle" name="calle">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="estado" name="estado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="region" class="form-label">Region</label>
+                            <input type="text" class="form-control" id="region" name="region">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="col-4"></div>
             </div>
         </div>
     </div>
-
-
 
     <footer>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
