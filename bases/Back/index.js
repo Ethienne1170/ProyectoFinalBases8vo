@@ -19,6 +19,7 @@ app.use('/usuario_info', plantas);
 app.use('/update_usuario', plantas);
 app.use('/update_usuario_pass', plantas);
 app.use('/registro', plantas);
+app.use('/agregar_planta', plantas);
 
 
 app.listen(3000,()=>{
