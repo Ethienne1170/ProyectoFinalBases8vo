@@ -229,6 +229,20 @@ router.post('/newInvernadero', (req, res) => {
     });
 })
 
+router.post('/insertPlantaInv',(req,res)=>{
+        console.log(req.body);
+        //res.json('amanda');
+        const {cantidad, invernaderos,clave}=req.body;
+        db.query('INSERT INTO inventario(claveinvernadero, claveph, cantidad) VALUES (?,?,?)',
+            [invernaderos,clave,cantidad],(err,result)=>{
+            if (err) {
+                res.json(err)
+                return;
+            }
+            res.status(200).json(result)
+        })
+})
+
 router.post('/agregar_planta', (req, res) => {
     try {
         const data = req.body;
@@ -238,6 +252,7 @@ router.post('/agregar_planta', (req, res) => {
                 res.json(error);
                 return;
             }
+          
             console.log(result.insertId);
             const plantId = result.insertId;
 
@@ -301,24 +316,6 @@ router.post('/agregar_planta', (req, res) => {
                 });
 
             res.status(200);
-            /*db.query('SELECT MAX(IdUso) as maxIdUso FROM usos', (error, results) => {
-                const maxIdUso = results[0].maxIdUso || 0; // Si no hay registros, maxId será null
-                const newIdUso = maxIdUso + 1;
-                db.query('INSERT INTO usos(IdUso, ClavePH, TipoUso, DescripcionUso, CantidadUso) VALUES (?,?,?,?,?)', [newIdUso,plantId,], (error, result) => {
-                    if (error) {
-                        res.json(error);
-                        return;
-                    }
-                })
-            })
-            db.query('INSERT INTO ubicacionorigen(claveh, estado, region) VALUES (?,?,?)', [plantId,], (error, result) => {
-                if (error) {
-                    res.json(error);
-                    return;
-                }
-            })
-
-            res.status(200);*/
         })
     } catch (error) {
         console.log(error)
