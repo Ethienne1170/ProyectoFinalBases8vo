@@ -207,7 +207,7 @@ router.get('/misinvernaderos', (req, res) => {
 )
 router.post('/newInvernadero', (req, res) => {
     console.log(req.body);
-    const { nombre, numeroExterior, numeroInterior, calle, estado, region, user } = req.body;
+    const { nombre, numeroExterior, numeroInterior, calle, estado, region, user , latitud, longitud} = req.body;
     //res.json('hola mundo')
 
     db.query('SELECT MAX(clave) as maxId FROM usuario', (error, results) => {
@@ -218,8 +218,8 @@ router.post('/newInvernadero', (req, res) => {
 
         const maxId = results[0].maxId || 0; // Si no hay registros, maxId será null
         const newId = maxId + 1;
-        db.query('INSERT INTO `invernadero`(`clave`, `claveusuario`, `nombre`, `numeroext`, `numeroint`, `calle`, `estado`, `region`) VALUES (?,?,?,?,?,?,?,?)',
-            [newId, user, nombre, numeroExterior, numeroInterior, calle, estado, region], (error, result) => {
+        db.query('INSERT INTO invernadero(clave, claveusuario, nombre,numeroext,numeroint, calle, estado, region,latitud, longitud) VALUES (?,?,?,?,?,?,?,?,?,?)',
+            [newId, user, nombre, numeroExterior, numeroInterior, calle, estado, region,latitud,longitud], (error, result) => {
                 if (error) {
                     res.json(error);
                     return;
@@ -229,12 +229,12 @@ router.post('/newInvernadero', (req, res) => {
     });
 })
 
-router.post('/insertPlantaInv',(req,res)=>{
-        console.log(req.body);
-        //res.json('amanda');
-        const {cantidad, invernaderos,clave}=req.body;
-        db.query('INSERT INTO inventario(claveinvernadero, claveph, cantidad) VALUES (?,?,?)',
-            [invernaderos,clave,cantidad],(err,result)=>{
+router.post('/insertPlantaInv', (req, res) => {
+    console.log(req.body);
+    //res.json('amanda');
+    const { cantidad, invernaderos, clave } = req.body;
+    db.query('INSERT INTO inventario(claveinvernadero, claveph, cantidad) VALUES (?,?,?)',
+        [invernaderos, clave, cantidad], (err, result) => {
             if (err) {
                 res.json(err)
                 return;
@@ -252,7 +252,7 @@ router.post('/agregar_planta', (req, res) => {
                 res.json(error);
                 return;
             }
-          
+
             console.log(result.insertId);
             const plantId = result.insertId;
 
@@ -321,6 +321,23 @@ router.post('/agregar_planta', (req, res) => {
         console.log(error)
         res.json(error);
     }
+})
+
+router.get('/usos', (req, res) => {
+    const { user } = req.query;
+    console.log(req.query)
+    try {
+        db.query('SELECT * FROM usos u WHERE u.ClavePH=?', [user], (err, result) => {
+            if(err){
+                res.json(error)
+                return
+            }
+            res.json(result);
+    })
+    } catch (error) {
+        res.json(error)
+    }
+
 })
 
 module.exports = router;

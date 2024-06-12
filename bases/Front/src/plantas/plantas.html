@@ -99,6 +99,7 @@
 <body>
     <script>
         var miVariableGlobal = 'Hola, soy una variable global!';
+        var tableGlobal='finux'
         document.addEventListener("DOMContentLoaded", function () {
             /*fetch('http://localhost:3500/pages/header')
               .then(response => response.text())
@@ -260,6 +261,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // URL de la API
             const apiUrl = 'http://localhost:3000/plantas/plantas';
+            tableGlobal = document.getElementById('table');
 
             // Contenedor donde se mostrarán los datos
             const plantasContainer = document.getElementById('plantas-container');
@@ -295,7 +297,7 @@
 
                 card.addEventListener('click', () => {
                     //alert(planta.clave);
-                    miVariableGlobal=planta.clave
+                    miVariableGlobal = planta.clave
                     console.log(miVariableGlobal)
                     popupTitle.textContent = planta.nombre;
                     popupDescription.textContent = planta.genero;
@@ -305,6 +307,37 @@
                     popupFamilia.textContent = planta.familia;
                     popupExtinta.textContent = planta.extinta;
                     popup.style.display = 'block';
+
+                    const url = `http://localhost:3000/plantas/usos?user=${miVariableGlobal}`;
+            const table = tableGlobal;
+            const invernaderoInfo = document.getElementById('invernadero-info');
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    tableGlobal.innerHTML='';
+                    data.forEach(planta => {
+                        const tr = document.createElement('tr');
+
+                        tr.innerHTML = `
+                            <td>${planta.TipoUso}</td>
+                            <td>${planta.DescripcionUso}</td>
+                        `;
+                       
+
+                        tableGlobal.appendChild(tr);
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Hubo un problema con la solicitud fetch:', error);
+                });
 
 
 
@@ -378,7 +411,7 @@
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
         function agregarPlanta() {
-            
+
             // Obtener los datos del formulario
             const form = document.getElementById('formPlanta');
             const formData = new FormData(form);
@@ -388,7 +421,7 @@
             formData.forEach((value, key) => {
                 data[key] = value;
             });
-            data['clave']=miVariableGlobal;
+            data['clave'] = miVariableGlobal;
 
             // URL de la API a la que se enviarán los datos
             const apiUrl = 'http://localhost:3000/plantas/insertPlantaInv';
@@ -404,16 +437,34 @@
             };
 
             // Realizar la solicitud Fetch
-            fetch(apiUrl, options)
+            
+
+            fetch(url)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error en la solicitud: ' + response.status);
                     }
-                    return response.json(); // Convertir la respuesta a JSON
+                    return response.json();
                 })
                 .then(data => {
-                    // Manejar la respuesta de la API según sea necesario
-                    console.log('Respuesta de la API:', data);
+                    console.log(data);
+                    data.forEach(planta => {
+                        const tr = document.createElement('tr');
+
+                        tr.innerHTML = `
+                            <td>${planta.nombre}</td>
+                            <td>${planta.calle}</td>
+                            <td>${planta.estado}</td>
+                            <td>${planta.region}</td>
+                        `;
+                        tr.addEventListener("click", () => {
+                            const url = 'invernadero?id=' + planta.clave;
+                            window.location.href = url;
+                        });
+
+                        table.appendChild(tr);
+                    });
+
                 })
                 .catch(error => {
                     console.error('Hubo un problema con la solicitud fetch:', error);
@@ -426,23 +477,57 @@
 
     </script>
     <div id="popup" class="popup">
+
         <div class="popup-content">
             <span class="close-btn">&times;</span>
-            <h2 id="popup-title"></h2>
-            <img id="popup-image" src="" alt="" style="width:100%; height:auto;">
-            <div class="info">
-                <p id="popup-description"></p>
-                <p id="genero"></p>
-                <p id="familia"></p>
-                <p id="extinta"></p>
+            <div id="carouselExample" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <h2 id="popup-title"></h2>
+                        <img id="popup-image" src="" alt="" style="width:100%; height:auto;">
+                        <div class="info">
+                            <p id="popup-description"></p>
+                            <p id="genero"></p>
+                            <p id="familia"></p>
+                            <p id="extinta"></p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <table class="table">
+                        <thead>
+                            <th>Tipo de uso</th>
+                            <th>Descripcion</th>
+                        </thead>
+                        <tbody id="table">
+                            
+                        </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
+
+
+
+
+
             <div class="d-none" id="agregar">
                 <div class="container">
                     <form id="formPlanta">
                         <div class="row"><input type="number" class="form-control" name="cantidad" id="canti"></div>
                         <div class="row"><select name="invernaderos" class="form-control" id="inv">
                             </select></div>
-                       
+
                     </form>
                     <div class="row"><button onclick="agregarPlanta()" class="btn">agregar</button></div>
                 </div>
