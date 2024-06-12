@@ -205,8 +205,9 @@ router.get('/misinvernaderos', (req,res)=>{
 )
 router.post('/newInvernadero',(req,res)=>{
     console.log(req.body);
-    res.json({id:212563})
-    return;
+    const {nombre,numeroExterior,numeroInterior,calle,estado,region,user}=req.body;  
+    //res.json('hola mundo')
+     
     db.query('SELECT MAX(clave) as maxId FROM usuario', (error, results) => {
         if (error) {
             res.status(500).json({ error: 'Error en la consulta a la base de datos', details: error });
@@ -216,12 +217,12 @@ router.post('/newInvernadero',(req,res)=>{
         const maxId = results[0].maxId || 0; // Si no hay registros, maxId será null
         const newId = maxId + 1;
         db.query('INSERT INTO `invernadero`(`clave`, `claveusuario`, `nombre`, `numeroext`, `numeroint`, `calle`, `estado`, `region`) VALUES (?,?,?,?,?,?,?,?)', 
-            [newId, data.nombre, data.appaterno, data.apmaterno, data.usuario, data.contrasena, data.estatus, data.privilegios], (error, result) => {
+            [newId, user,nombre,numeroExterior,numeroInterior,calle,estado,region], (error, result) => {
             if (error) {
                 res.json(error);
                 return;
             }
-            res.status(200).json(result);
+            res.status(200).json('para cambiarlo todo, hay que dejar todo como esta');
         })
     });
 
