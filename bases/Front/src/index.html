@@ -164,6 +164,7 @@
 
                         document.cookie = `usuario=${user}; ${expires}; path=/`;
                         document.cookie = `privilegios=${usuario.privilegios}; ${expires}; path=/`;
+                        document.cookie=`claveUser=${usuario.clave}; ${expires}; path=/`
                         //document.cookie = `email=${email}; path=/`;
                         window.location.href = "http://localhost:3500/pages/home";
                     }
