@@ -97,6 +97,7 @@
     });
   </script>
   <header>
+    
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="home">Inicio</a>
@@ -175,13 +176,18 @@
   </header>
 
   <h1>Lista de Invernaderos</h1>
+
   <div id="inver-container"></div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       // URL de la API
       const apiUrl = "http://localhost:3000/plantas/invernaderos";
-
+      const img1='bases\Front\images\desert.jpeg'
+      const img2='bases\Front\images\hongo.jpeg'
+      const img3='bases\Front\images\naranja.jpeg'
+      const img4='bases\Front\images\platano.jpeg'
+      const img5='bases\Front\images\strawbarry.jpeg'
       // Contenedor donde se mostrarán los datos
       const inverContainer = document.getElementById("inver-container");
 

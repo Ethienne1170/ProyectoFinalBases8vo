@@ -44,6 +44,9 @@ router.get('/crear_plantas', (req, res)=>{
 router.get('/registro', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/registro.html'))
 })
+router.get('/inv_usuario', (req, res)=>{
+    res.sendFile(path.resolve(__dirname,'../src/invuser.html'))
+})
 
 
 module.exports=router;

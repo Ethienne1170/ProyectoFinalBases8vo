@@ -68,7 +68,7 @@ router.get('/usuarios', (req, res) => {
 
 router.get('/login', (req, res) => {
     try {
-        db.query('SELECT usuario, contrasena, privilegios FROM usuario', (error, result) => {
+        db.query('SELECT * FROM usuario', (error, result) => {
             if (error) {
                 res.json(error);
                 return;
@@ -186,6 +186,47 @@ router.post('/registro', (req, res) => {
         console.log(error)
         res.json(error);
     }
+})
+router.get('/misinvernaderos', (req,res)=>{
+    const {user}=req.query;
+    try {
+        db.query('SELECT i.* FROM invernadero i, usuario u WHERE u.usuario=? and u.clave= i.claveusuario',[user],(error, result)=>{
+            if (error) {
+                res.json('eres una verguenza para la ley')
+                return;
+            }
+            res.status(200).json(result);
+        })
+
+    } catch (error) {
+        res.json(error);
+    }
+}
+)
+router.post('/newInvernadero',(req,res)=>{
+    console.log(req.body);
+    res.json({id:212563})
+    return;
+    db.query('SELECT MAX(clave) as maxId FROM usuario', (error, results) => {
+        if (error) {
+            res.status(500).json({ error: 'Error en la consulta a la base de datos', details: error });
+            return;
+        }
+
+        const maxId = results[0].maxId || 0; // Si no hay registros, maxId será null
+        const newId = maxId + 1;
+        db.query('INSERT INTO `invernadero`(`clave`, `claveusuario`, `nombre`, `numeroext`, `numeroint`, `calle`, `estado`, `region`) VALUES (?,?,?,?,?,?,?,?)', 
+            [newId, data.nombre, data.appaterno, data.apmaterno, data.usuario, data.contrasena, data.estatus, data.privilegios], (error, result) => {
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+        })
+    });
+
+    
+    
 })
 
 
