@@ -22,7 +22,9 @@ router.get('/home', (req, res)=>{
 router.get('/header', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/header.html'))
 })
-
+router.get('/invernadero',(req,res)=>{
+    res.sendFile(path.resolve(__dirname, '../src/invernadero.html'));
+})
 router.get('/lista_usuarios', (req, res)=>{
     res.sendFile(path.resolve(__dirname,'../src/lista_usuarios.html'))
 })

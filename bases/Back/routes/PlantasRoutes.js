@@ -96,6 +96,40 @@ router.post('/usuario_info', (req, res) => {
         res.json(error);
     }
 })
+router.get('/invernaderouser',(req, res)=>{
+    const {id}=req.query;
+    try {
+        db.query('SELECT * FROM invernadero WHERE clave=?', [id], (error,result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result[0]);
+
+        } )        
+
+    } catch (error) {
+        res.status(200).json(error);
+    }
+})
+
+
+router.get('/invernaderoplanta',(req, res)=>{
+    const {id}=req.query;
+    try {
+        db.query('SELECT p.* FROM plantahongoarbolcatus p, inventario i WHERE i.claveinvernadero=? and i.claveph= p.clave;', [id], (error,result)=>{
+            if (error) {
+                res.json(error);
+                return;
+            }
+            res.status(200).json(result);
+
+        } )        
+
+    } catch (error) {
+        res.status(200).json(error);
+    }
+})
 
 router.post('/update_usuario', (req, res) => {
     try {
