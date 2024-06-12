@@ -252,13 +252,7 @@
         </div>
       </div>
 
-
-    <script>
-        
-
-        $("#formulario").click(function () {
-            $("#exampleModal").show();
-        })
+      <script>
         document.addEventListener('DOMContentLoaded', function () {
             // URL de la API
             const apiUrl = 'http://localhost:3000/plantas/plantas';
@@ -303,10 +297,12 @@
                     popupFamilia.textContent = planta.familia;
                     popupExtinta.textContent = planta.extinta;
                     popup.style.display = 'block';
+
+
+
                 })
 
                 plantasContainer.appendChild(card);
-
             }
 
             // Usar fetch para obtener los datos de la API
@@ -320,7 +316,7 @@
                 })
                 .then(data => {
                     // Suponiendo que data es un array de plantas
-                    c
+                    data.forEach(planta => createPlantCard(planta));
                 })
                 .catch(error => {
                     console.error('Hubo un problema con la solicitud fetch:', error);
