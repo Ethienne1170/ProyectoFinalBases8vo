@@ -42,6 +42,138 @@
       position: absolute;
       z-index: 100;
     }
+
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #plantas-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            /*border: 1px solid #ccc;
+            border-radius: 8px;*/
+            padding: 16px;
+            margin: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /*width: 200px;*/
+            text-align: center;
+        }
+
+        .center {
+            display: flex;
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            z-index: 1000;
+        }
+
+        .popup {
+            display: none;
+            /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            /* Asegura que el popup esté en frente de todos los elementos */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Fondo semi-transparente */
+        }
+
+        .popup-content {
+            background-color: #fff;
+            margin: 15% auto;
+            /* 15% desde la parte superior y centrado */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Ocupa el 50% de la pantalla */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        body {
+            background-color: #F5F5DC; /* Beige */
+            color: #8B4513;
+        }
+
+        .navbar-nav .nav-link {
+            color: #006400; /* Verde oscuro */
+        }
+
+        .navbar-toggler-icon {
+            background-color: #006400; /* Verde oscuro */
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: #006400; /* Verde oscuro */
+        }
+
+        
+
+        .nav-link.dropdown-toggle,
+        .dropdown-menu {
+            background-color: #F5F5DC; /* Beige */
+            color: #006400; /* Verde oscuro */
+        }
+
+        .dropdown-menu a.dropdown-item {
+            color: #8B4513; /* Marrón oscuro */
+        }
+
+        .dropdown-divider {
+            background-color: #A0522D; /* Marrón claro */
+        }
+
+        .btn-primary {
+            background-color: #8B4513; /* Marrón oscuro */
+            border-color: #8B4513; /* Marrón oscuro */
+        }
+
+        .btn-primary:hover {
+            background-color: #A0522D; /* Marrón claro */
+            border-color: #A0522D; /* Marrón claro */
+        }
+
+        th {
+            background-color: #7CFC00; /* Verde claro */
+        }
   </style>
 </head>
 
